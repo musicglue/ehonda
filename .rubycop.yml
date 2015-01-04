@@ -1,0 +1,54 @@
+AllCops:
+  Exclude:
+    - Guardfile
+    - bin/**/*
+    - db/**/*
+    - config/**/*
+    - script/**/*
+    - vendor/**/*
+    - lib/generators/**/*
+
+AmbiguousOperator:
+  Enabled: false
+
+GuardClause:
+  Enabled: false
+
+ClassAndModuleChildren:
+  Enabled: false
+
+ClassLength:
+  Max: 125
+
+CyclomaticComplexity:
+  Enabled: false
+
+Documentation:
+  Enabled: false
+
+DoubleNegation:
+  Enabled: false
+
+Encoding:
+  EnforcedStyle: when_needed
+
+HandleExceptions:
+  Enabled: false
+
+LineLength:
+  Max: 120
+
+MethodDefParentheses:
+  Enabled: false
+
+MethodLength:
+  Enabled: false
+
+MultilineBlockChain:
+  Enabled: false
+
+RescueModifier:
+  Enabled: false
+
+TrivialAccessors:
+  Enabled: false
