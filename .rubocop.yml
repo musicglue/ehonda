@@ -1,26 +1,21 @@
 AllCops:
+  Include:
+    - Rakefile
   Exclude:
-    - Guardfile
     - bin/**/*
     - db/**/*
     - config/**/*
     - script/**/*
+    - test/**/*
     - vendor/**/*
-    - lib/generators/**/*
+
+AbcSize:
+  Enabled: false
 
 AmbiguousOperator:
   Enabled: false
 
-GuardClause:
-  Enabled: false
-
 ClassAndModuleChildren:
-  Enabled: false
-
-ClassLength:
-  Max: 125
-
-CyclomaticComplexity:
   Enabled: false
 
 Documentation:
@@ -41,14 +36,17 @@ LineLength:
 MethodDefParentheses:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
 MethodLength:
   Enabled: false
 
 MultilineBlockChain:
   Enabled: false
 
-RescueModifier:
-  Enabled: false
-
 TrivialAccessors:
-  Enabled: false
+  AllowPredicates: true

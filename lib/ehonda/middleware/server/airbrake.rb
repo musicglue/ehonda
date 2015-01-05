@@ -1,8 +1,8 @@
-module EHonda
+module Ehonda
   module Middleware
     module Server
       class Airbrake
-        def call(worker, queue, sqs_msg, body)
+        def call(_worker, _queue, sqs_msg, body)
           yield
         rescue => e
           parameters = {}

@@ -1,6 +1,6 @@
-module EHonda
+module Ehonda
   class TypedMessage
-    def initialize message
+    def initialize(message)
       @message = message
     end
 
@@ -18,6 +18,10 @@ module EHonda
 
     def body
       hash['body']
+    end
+
+    def to_h
+      hash
     end
 
     private

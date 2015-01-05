@@ -10,14 +10,14 @@ module ActiveRecord
       end
 
       def connection_with_forbid_implicit(*args, &block)
-        if (implicit_checkout_forbidden? && !connection_handler.retrieve_connection_pool(self).active_connection?)
-          message = "Implicit ActiveRecord checkout attempted when Thread :force_explicit_connections set!"
+        if implicit_checkout_forbidden? && !connection_handler.retrieve_connection_pool(self).active_connection?
+          message = 'Implicit ActiveRecord checkout attempted when Thread :force_explicit_connections set!'
 
           # I want to make SURE I see this error in test output, even though
           # in some cases my code is swallowing the exception.
           $stderr.puts(message) if Rails.env.test?
 
-          raise ImplicitConnectionForbiddenError, message
+          fail ImplicitConnectionForbiddenError, message
         end
 
         connection_without_forbid_implicit(*args, &block)
