@@ -27,7 +27,10 @@ module Ehonda
     private
 
     def hash
-      @hash ||= JSON.parse(@message.body)
+      @hash ||= begin
+        body = JSON.parse(@message.body)
+        body['Message'] || body
+      end
     end
 
     def headers
