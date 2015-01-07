@@ -29,7 +29,12 @@ module Ehonda
     def hash
       @hash ||= begin
         body = JSON.parse(@message.body)
-        body['Message'] || body
+
+        if body.key?('Message')
+          JSON.parse(body['Message'])
+        else
+          body
+        end
       end
     end
 
