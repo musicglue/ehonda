@@ -14,15 +14,13 @@ class PublishedMessage < ActiveRecord::Base
 
   def self.publish message, headers = {}
     topic_name = message.class.to_s.underscore.dasherize.sub(/-message$/, '')
-
-    headers.merge!(type: topic_name)
-           .reverse_merge!(id: SecureRandom.uuid, version: 1)
+    headers.merge!(type: topic_name).reverse_merge!(id: SecureRandom.uuid, version: 1)
 
     PublishedMessage.create!(
       topic: topic_name,
       message: {
         header: headers,
-        body: attributes
+        body: message.attributes
       })
   end
 end
