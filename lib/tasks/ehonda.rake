@@ -72,7 +72,7 @@ namespace :ehonda do
   end
 
   namespace :processed_messages do
-    desc "Publishes a list of messages JSON encoded in a file. Pass OUTPUT='/path/to/messages.json'."
+    desc "Publishes a list of messages JSON encoded in a file. Pass INPUT='/path/to/messages.json'."
     task :publish_all_from_file => :environment do
       require 'ehonda/message_publisher'
 
@@ -83,7 +83,7 @@ namespace :ehonda do
         transaction-account-allocation-required
         transactions-export-requested)
 
-      File.open(Nenv.output, 'r') do |file|
+      File.open(Nenv.input, 'r') do |file|
         loop do
           json = file.gets
           break if json.nil?
