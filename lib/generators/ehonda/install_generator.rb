@@ -5,7 +5,7 @@ module Ehonda
   class InstallGenerator < Rails::Generators::Base
     include ::ActiveRecord::Generators::Migration
 
-    desc 'Installs models and initializers for Envoy'
+    desc 'Installs models and initializers for Ehonda'
 
     source_root File.expand_path('../templates', __FILE__)
 

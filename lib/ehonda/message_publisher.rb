@@ -1,9 +1,6 @@
 module Ehonda
   class MessagePublisher
     def initialize
-      config = Envoy.config
-      config.validate!
-
       @sns = Ehonda.sns_client
       @arns = Ehonda::Aws::Arns.new
     end
