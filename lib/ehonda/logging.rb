@@ -14,11 +14,12 @@ module Ehonda
           error_hash[:backtrace] = format_backtrace(error_object.backtrace) if error_object.backtrace
         end
 
-        timestamp = time.utc.iso8601
+        timestamp = %Q{timestamp="#{time.utc.iso8601}"} if Rails.env.development?
         severity = severity.downcase
         data = format_hash data_hash
         error = format_hash error_hash
-        text = %(timestamp="#{timestamp}" pid="#{pid}" thread="#{thread}" severity="#{severity}" #{data} #{error}).strip
+
+        text = %(#{timestamp} #{worker_id} pid="#{pid}" thread="#{thread}" severity="#{severity}" #{data} #{error}).strip
 
         "#{text}\n"
       end
