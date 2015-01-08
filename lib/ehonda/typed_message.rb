@@ -32,12 +32,19 @@ module Ehonda
 
     def hash
       @hash ||= begin
-        body = JSON.parse(@message.body)
-
-        if body.key?('Message')
-          JSON.parse(body['Message'])
+        if @message.is_a?(TypedMessage)
+          @message.to_h
         else
-          body
+          raw_text = @message
+          raw_text = @message.body if @message.is_a?(::Aws::SQS::Message)
+
+          parsed = JSON.parse(raw_text)
+
+          # cmb uses a different serialization format to aws, so we do some
+          # format detection to see if we need to do more processing to get
+          # the message hash out
+          parsed = JSON.parse(parsed['Message']) if parsed.key?('Message')
+          parsed.with_indifferent_access
         end
       end
     end
