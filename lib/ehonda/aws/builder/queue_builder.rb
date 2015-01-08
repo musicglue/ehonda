@@ -28,12 +28,11 @@ module Ehonda
 
           if Ehonda.configuration.sqs_protocol == 'sqs'
             if queue_configuration.respond_to?(:redrive_policy)
-              policy = '{}'
               policy = redrive_policy(
                 queue_configuration.redrive_policy.dead_letter_queue,
                 queue_configuration.redrive_policy.max_receive_count) if queue_configuration.redrive_policy.enabled
 
-              attributes.merge! 'RedrivePolicy' => policy
+              attributes.merge! 'RedrivePolicy' => policy.to_s
             end
 
             policy = queue_policy queue_arn
