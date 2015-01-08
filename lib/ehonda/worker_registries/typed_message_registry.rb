@@ -34,6 +34,8 @@ module Ehonda
              "Worker not found for message type #{message.type} on queue #{queue}." unless worker_class
 
         worker_class.new
+      rescue JSON::ParserError
+        fail "#{self.class} could not parse the supplied message body as JSON."
       end
 
       def queues
