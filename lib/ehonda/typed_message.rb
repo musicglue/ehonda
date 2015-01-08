@@ -16,6 +16,10 @@ module Ehonda
       headers['version']
     end
 
+    def headers
+      hash['headers']
+    end
+
     def body
       hash['body']
     end
@@ -36,10 +40,6 @@ module Ehonda
           body
         end
       end
-    end
-
-    def headers
-      hash['header']
     end
   end
 end
