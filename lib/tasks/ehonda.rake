@@ -53,62 +53,49 @@ namespace :ehonda do
 
     desc "JSON serializes all processed messages into a file. Pass OUTPUT='/path/to/messages.json'."
     task :write_all_to_file => :environment do
-      index = 0
-      ignorable = %w(
-        transaction-account-allocation-required)
-
-      File.open(Nenv.output, 'w+') do |file|
-        DeadLetter.find_each do |message|
-          unless ignorable.include? message.message['header']['type']
-            file.write message.message.to_json
-            file.write "\n"
-
-            puts "#{index} message(s) written" if (index > 0) && (index % 1000 == 0)
-            index += 1
-          end
-        end
-      end
+      require 'ehonda/message_file_serializer'
+      Ehonda::MessageFileSerializer.new(Nenv.output).write DeadLetter.all
     end
   end
 
-  namespace :processed_messages do
+  namespace :messages do
     desc "Publishes a list of messages JSON encoded in a file. Pass INPUT='/path/to/messages.json'."
     task :publish_all_from_file => :environment do
       require 'ehonda/message_publisher'
+      require 'ehonda/count_logger'
 
+      path = Nenv.input
       publisher = Ehonda::MessagePublisher.new
-      index = 0
+      counter = Ehonda::CountLogger.new { |index| "#{index} message(s) published" }
+
       ignorable = %w(
         accounts-export-requested
         transaction-account-allocation-required
         transactions-export-requested)
 
-      File.open(Nenv.input, 'r') do |file|
+      File.open(path, 'r') do |file|
         loop do
           json = file.gets
           break if json.nil?
 
-          hash = ActiveSupport::JSON.decode json
+          message = Ehonda::TypedMessage.new(json)
 
-          unless ignorable.include? hash['header']['type']
-            publisher.publish hash
-            puts "#{index} message(s) published" if (index > 0) && (index % 1000 == 0)
-            index += 1
+          unless ignorable.include? message.type
+            publisher.publish message.to_h
+            counter.count
           end
         end
       end
-    end
 
+      Shoryuken.logger.info "Messages published from #{path}."
+    end
+  end
+
+  namespace :processed_messages do
     desc "JSON serializes all processed messages into a file. Pass OUTPUT='/path/to/messages.json'."
     task :write_all_to_file => :environment do
-      File.open(Nenv.output, 'w+') do |file|
-        ProcessedMessage.find_each.with_index do |message, index|
-          file.write message.message.to_json
-          file.write "\n"
-
-          puts "#{index} message(s) written" if (index > 0) && (index % 1000 == 0)
-        end
-      end
+      require 'ehonda/message_file_serializer'
+      Ehonda::MessageFileSerializer.new(Nenv.output).write ProcessedMessage.all
     end
   end
 end
