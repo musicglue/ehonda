@@ -17,7 +17,7 @@ module Ehonda
     end
 
     def headers
-      hash['headers']
+      hash['headers'] || hash['header']
     end
 
     def body
