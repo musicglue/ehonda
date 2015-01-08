@@ -19,7 +19,7 @@ module Ehonda
         data = format_hash data_hash
         error = format_hash error_hash
 
-        text = %(#{timestamp} #{worker_id} pid="#{pid}" thread="#{thread}" severity="#{severity}" #{data} #{error}).strip
+        text = %(#{timestamp} pid="#{pid}" thread="#{thread}" severity="#{severity}" #{data} #{error}).strip
 
         "#{text}\n"
       end
