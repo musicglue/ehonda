@@ -20,7 +20,7 @@ module Ehonda
                 sqs_id: sqs_msg.message_id,
                 message_id: message.id,
                 queue: queue,
-                message: original_message_body)
+                message: message.to_h)
             end
           end
         end

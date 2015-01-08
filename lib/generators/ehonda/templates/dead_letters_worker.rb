@@ -14,6 +14,6 @@ class DeadLettersWorker
     DeadLetter.create!(
       sqs_id: sqs_message.message_id,
       message_id: typed_message.id,
-      message: payload)
+      message: typed_message.to_h)
   end
 end
