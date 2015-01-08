@@ -7,7 +7,7 @@ class DeadLettersWorker
     subscriptions: { your_dead_letter_queue: '*' })
 
   def perform sqs_message, payload
-    typed_message = TypedMessage.new sqs_message
+    typed_message = Ehonda::TypedMessage.new sqs_message
 
     return if DeadLetter.exists? message_id: typed_message.id
 
