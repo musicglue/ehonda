@@ -77,6 +77,12 @@ module Ehonda
 
     def use_ehonda_logging
       require 'ehonda/logging'
+
+      Ehonda::Logging.logger = Logger.new(STDOUT).tap do |l|
+        l.level = Shoryuken::Logging.logger.level
+        l.formatter = Ehonda::Logging::Formatter.new
+      end
+
       Shoryuken::Logging.logger = Ehonda::Logging.logger
     end
 
