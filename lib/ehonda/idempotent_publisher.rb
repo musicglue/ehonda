@@ -1,6 +1,6 @@
 module Ehonda
   class IdempotentPublisher
-    def initialize limit: 10, publisher_client: nil, logger: nil
+    def initialize limit: 100, publisher_client: nil, logger: nil
       @limit = limit
       @publisher_id = ENV['DYNO'] || 'publisher'
       @publisher = publisher_client
