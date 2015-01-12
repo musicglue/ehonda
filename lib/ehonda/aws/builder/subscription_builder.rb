@@ -18,25 +18,26 @@ module Ehonda
             attribute_names: ['QueueArn']).attributes['QueueArn']
 
           topics.each do |topic|
-            topic = EnvironmentalName.new(topic).to_s
-            topic_arn = @arns.sns_topic_arn topic
+            topic_name = EnvironmentalName.new(topic).to_s
+            topic_arn = @arns.sns_topic_arn topic_name
+            topic = Aws::SNS::Topic.new topic_arn, client: @sns
 
             if Ehonda.configuration.sns_protocol == 'cqs'
               account_id = Ehonda.configuration.aws_account_id
-              label = "subscribe-#{account_id}-#{Time.now.strftime('%Y%m%d%H%M%S')}"
 
-              @sns.add_permission topic_arn: topic_arn,
-                                  label: label,
-                                  aws_account_id: [account_id],
-                                  action_name: ['Subscribe']
+              topic.add_permission(
+                label: "subscribe-#{account_id}-#{Time.now.strftime('%Y%m%d%H%M%S')}",
+                aws_account_id: [account_id],
+                action_name: ['Subscribe'])
             end
 
-            @logger.info subscribing_queue: @queue, subscription_topic: topic
+            @logger.info subscribing_queue: @queue, subscription_topic: topic_name
 
-            @sns.subscribe(
+            subscription = topic.subscribe(
               endpoint: queue_arn,
-              protocol: Ehonda.configuration.sns_protocol,
-              topic_arn: topic_arn)
+              protocol: Ehonda.configuration.sns_protocol)
+
+            subscription.set_attributes attribute_name: 'RawMessageDelivery', attribute_value: 'true'
           end
         end
 
