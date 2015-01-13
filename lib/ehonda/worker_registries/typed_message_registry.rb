@@ -58,7 +58,8 @@ module Ehonda
         end
 
         worker_subscriptions.each do |owning_queue, message_types|
-          queue_subscriptions = @subscriptions.fetch_store env_name(owning_queue), {}
+          env_queue_name = env_name owning_queue
+          queue_subscriptions = @subscriptions.fetch env_queue_name, {}
 
           [message_types].flatten.each do |message_type|
             message_type = message_type.to_s.dasherize
@@ -72,6 +73,8 @@ module Ehonda
 
             queue_subscriptions.store message_type, clazz
           end
+
+          @subscriptions.store env_queue_name, queue_subscriptions
         end
       end
 
