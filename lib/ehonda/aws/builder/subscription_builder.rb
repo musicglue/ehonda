@@ -20,7 +20,7 @@ module Ehonda
           topics.each do |topic|
             topic_name = EnvironmentalName.new(topic).to_s
             topic_arn = @arns.sns_topic_arn topic_name
-            topic = Aws::SNS::Topic.new topic_arn, client: @sns
+            topic = ::Aws::SNS::Topic.new topic_arn, client: @sns
 
             if Ehonda.configuration.sns_protocol == 'cqs'
               account_id = Ehonda.configuration.aws_account_id

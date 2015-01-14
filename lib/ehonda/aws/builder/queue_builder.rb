@@ -13,7 +13,7 @@ module Ehonda
           @logger.info building_queue: @name
 
           queue_url = @sqs.create_queue(queue_name: @name)[:queue_url]
-          queue = Aws::SQS::Queue.new queue_url, @sqs
+          queue = ::Aws::SQS::Queue.new queue_url, @sqs
           queue_configuration = Ehonda.configuration.get_queue(@name)
 
           attributes = {
@@ -31,11 +31,11 @@ module Ehonda
               attributes.merge! 'RedrivePolicy' => policy.to_s
             end
 
-            policy = queue_policy queue.arn
+            policy = queue_policy queue
             attributes.merge! 'Policy' => policy
           end
 
-          queue.set_attributes attributes
+          queue.set_attributes attributes: attributes
         end
 
         def delete
@@ -52,7 +52,7 @@ module Ehonda
           arns.sort.map { |arn| %(#{indent}"#{arn}") }.join(",\n")
         end
 
-        def queue_policy queue.arn
+        def queue_policy queue
           topic_arns = topics.map { |topic| @arns.sns_topic_arn topic }
 
           <<-EOS
