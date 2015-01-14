@@ -6,12 +6,12 @@ module Ehonda
       class NewRelic
         include ::NewRelic::Agent::Instrumentation::ControllerInstrumentation
 
-        def call(worker, queue, sqs_msg, body)
+        def call(worker, queue, sqs_msg, _body)
           trace_args = if worker.respond_to?(:newrelic_trace_args)
-            worker.newrelic_trace_args(worker, queue, sqs_msg)
-          else
-            self.class.default_trace_args(worker, queue, sqs_msg)
-          end
+                         worker.newrelic_trace_args(worker, queue, sqs_msg)
+                       else
+                         self.class.default_trace_args(worker, queue, sqs_msg)
+                       end
 
           perform_action_with_newrelic_trace(trace_args) do
             if ::NewRelic::Agent.config[:'shoryuken.capture_params']
@@ -24,9 +24,7 @@ module Ehonda
           end
         end
 
-        private
-
-        def self.default_trace_args(worker, queue, sqs_msg)
+        def self.default_trace_args(worker, queue, _sqs_msg)
           {
             name: 'perform',
             class_name: worker.class,
@@ -38,5 +36,3 @@ module Ehonda
     end
   end
 end
-
-
