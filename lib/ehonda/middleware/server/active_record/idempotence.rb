@@ -7,9 +7,8 @@ module Ehonda
             @logger = logger
           end
 
-          def call _worker, queue, sqs_msg, body
+          def call _worker, queue, sqs_msg, _body
             message = TypedMessage.new sqs_msg
-            original_message_body = body.dup
 
             if ProcessedMessage.exists? message_id: message.id, queue: queue
               @logger.info middleware: 'idempotence', ignored_message_id: message.id

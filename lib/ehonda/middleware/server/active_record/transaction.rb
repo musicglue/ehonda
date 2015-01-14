@@ -31,7 +31,7 @@ module Ehonda
               begin
                 callback_method = worker.method on_error
               rescue NameError
-                fail "Worker #{worker.class} is using middleware "\
+                raise "Worker #{worker.class} is using middleware "\
                      "#{self.class} which expected to find a callback "\
                      "method called '#{on_error}', but none was found."
               end

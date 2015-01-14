@@ -56,12 +56,20 @@ module Ehonda
       end
     end
 
+    def shoryuken_config_path
+      @shoryuken_config_path ||= begin
+        (Rails.root + 'config' + 'shoryuken.yml') if defined?(::Rails)
+      end
+    end
+
+    attr_writer :shoryuken_config_path
+
     def shoryuken_config
       @shoryuken_config ||= begin
         YAML.load(
           ERB.new(
             IO.read(
-              Rails.root + 'config' + 'shoryuken.yml')
+              shoryuken_config_path)
             ).result
           ).with_indifferent_access
       end

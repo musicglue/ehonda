@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/indifferent_access'
+require 'active_support/json'
 require 'shoryuken'
 require 'ehonda/version'
 require 'ehonda/logging'
@@ -7,14 +9,13 @@ require 'ehonda/railtie' if defined? Rails
 module Ehonda
   class << self
     def configure
-      @config ||= Configuration.new.tap do |config|
-        yield config
-        config.validate!
-      end
+      @config ||= Configuration.new
+      yield @config if block_given?
+      @config.validate!
     end
 
     def configuration
-      fail 'You must call Ehonda.configure in an initializer.' unless @config
+      fail 'You must call Ehonda.configure before you can access any config.' unless @config
       @config
     end
 

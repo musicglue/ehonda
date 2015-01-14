@@ -5,7 +5,7 @@ module Ehonda
 
       def initialize owner
         @owner = owner
-        @enabled = true
+        @enabled = false
         @max_receive_count = 10
       end
 
