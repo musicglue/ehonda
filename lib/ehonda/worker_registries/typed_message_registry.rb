@@ -85,7 +85,7 @@ module Ehonda
                        @subscriptions.values.map(&:keys).flatten
                      end
 
-        topic_list.uniq - ['*']
+        (topic_list.uniq - ['*']).map { |topic| env_name topic }
       end
 
       def workers(queue)
