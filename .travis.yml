@@ -1,0 +1,10 @@
+rvm:
+  - ruby-2.2.0
+
+language: ruby
+
+script:
+  - bundle exec rake test
+
+notifications:
+  hipchat: 4c9312238a5ef355ef8e321fc2bab7@Music Glue
