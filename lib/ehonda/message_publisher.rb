@@ -14,15 +14,7 @@ module Ehonda
     end
 
     def publish message, headers = {}
-      if message.is_a?(Ehonda::TypedMessage)
-        message = message.to_h
-      else
-        fail InvalidMessageError, 'MessagePublisher expects an '\
-          "Ehonda::TypedMessage, but got a #{message.class}." unless message.is_a?(Hash)
-
-        message = @sanitizer.sanitize message
-      end
-
+      message = Ehonda::TypedMessage.new(message).to_h
       message['header'].merge! headers
       message = @sanitizer.sanitize message
 

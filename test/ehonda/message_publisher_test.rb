@@ -1,5 +1,6 @@
 require_relative '../test_helper'
 require 'ehonda/message_publisher'
+require 'active_attr'
 
 describe Ehonda::MessagePublisher do
   class SnsStub
@@ -68,5 +69,19 @@ describe Ehonda::MessagePublisher do
     @sns.message['header']['this'].must_equal 'that'
     @sns.message['header']['version'].must_equal 2
     @sns.message['body']['blah'].must_equal 'xyzxyz'
+  end
+
+  it 'can publish an arbitrary model as a typed message' do
+    ThingHappenedMessage = Class.new do
+      include ActiveAttr::Model
+
+      attribute :foo
+    end
+
+    message = ThingHappenedMessage.new(foo: 'wat')
+    @publisher.publish message
+
+    @sns.topic_arn.must_equal 'arn:cmb:cns:ccp:1234567890:thing-happened'
+    @sns.message['body']['foo'].must_equal 'wat'
   end
 end
