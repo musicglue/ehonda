@@ -8,3 +8,4 @@ script:
 
 notifications:
   hipchat: 4c9312238a5ef355ef8e321fc2bab7@Music Glue
+
