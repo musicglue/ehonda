@@ -4,7 +4,7 @@ module Ehonda
       class TopicBuilder
         def initialize logger, name
           @logger = logger
-          @name = EnvironmentalName.new(name).to_s
+          @name = name
           @sns = Ehonda.sns_client
           @arns = Arns.new
         end

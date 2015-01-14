@@ -17,8 +17,7 @@ module Ehonda
             queue_url: queue_url,
             attribute_names: ['QueueArn']).attributes['QueueArn']
 
-          topics.each do |topic|
-            topic_name = EnvironmentalName.new(topic).to_s
+          topics.each do |topic_name|
             topic_arn = @arns.sns_topic_arn topic_name
             topic = ::Aws::SNS::Topic.new topic_arn, client: @sns
 

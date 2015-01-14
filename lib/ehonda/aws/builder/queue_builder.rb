@@ -81,7 +81,7 @@ EOS
         end
 
         def redrive_policy dead_letter_queue, max_receive_count
-          arn = @arns.sqs_queue.arn EnvironmentalName.new(dead_letter_queue).to_s
+          arn = @arns.sqs_queue_arn EnvironmentalName.new(dead_letter_queue).to_s
           %({"maxReceiveCount":"#{max_receive_count}", "deadLetterTargetArn":"#{arn}"})
         end
 
