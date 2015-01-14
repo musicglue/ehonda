@@ -51,7 +51,7 @@ module Ehonda
     end
 
     def require_workers
-      Dir[Rails.root + 'app' + 'workers' + '*.rb'].each do |path|
+      Dir[Rails.root + '**' + 'app' + 'workers' + '*.rb'].each do |path|
         require path
       end
     end
