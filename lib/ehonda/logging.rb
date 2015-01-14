@@ -14,7 +14,7 @@ module Ehonda
           error_hash[:backtrace] = format_backtrace(error_object.backtrace) if error_object.backtrace
         end
 
-        timestamp = %Q{timestamp="#{time.utc.iso8601}"} if Rails.env.development?
+        timestamp = %(timestamp="#{time.utc.iso8601}") if defined?(Rails) && Rails.env.development?
         severity = severity.downcase
         data = format_hash data_hash
         error = format_hash error_hash
