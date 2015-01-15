@@ -38,20 +38,20 @@ module Ehonda
         data = format_hash data_hash
         error = format_hash error_hash
 
-        text = timestamp.to_s
+        text = [timestamp]
         text << write_kv('pid', pid)
         text << write_kv('thread', thread)
         text << write_kv('severity', severity)
         text << data
         text << error
 
-        "#{text.strip}\n"
+        "#{text.join(' ').strip}\n"
       end
 
       private
 
       def write_kv key, value
-        %(#{DARK_COLOUR}#{key}="#{DEFAULT_COLOUR}#{value}#{DARK_COLOUR}"#{DEFAULT_COLOUR} )
+        %(#{DARK_COLOUR}#{key}="#{DEFAULT_COLOUR}#{value}#{DARK_COLOUR}"#{DEFAULT_COLOUR})
       end
 
       def escape string
