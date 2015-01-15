@@ -2,7 +2,21 @@ require 'logger'
 
 module Ehonda
   module Logging
-    class Formatter < Logger::Formatter
+    class Formatter
+      include ActiveSupport::TaggedLogging::Formatter
+
+      SEVERITY_TO_COLOR_MAP = {
+        'DEBUG' => '0;37',
+        'INFO' => '32',
+        'WARN' => '33',
+        'ERROR' => '31',
+        'FATAL' => '31',
+        'UNKNOWN' => '37'
+      }
+
+      DARK_COLOUR = "\e[90m"
+      DEFAULT_COLOUR = "\033[0m"
+
       def call severity, time, _program_name, message
         data_hash = message.is_a?(Hash) ? message : { message: message }
         error_hash = {}
@@ -14,17 +28,30 @@ module Ehonda
           error_hash[:backtrace] = format_backtrace(error_object.backtrace) if error_object.backtrace
         end
 
-        timestamp = %(timestamp="#{time.utc.iso8601}") if defined?(Rails) && Rails.env.development?
-        severity = severity.downcase
+        timestamp = write_kv('timestamp', time.utc.iso8601) if defined?(Rails) && Rails.env.development?
+
+        severity_colour = "\033[#{SEVERITY_TO_COLOR_MAP[severity]}m"
+        severity = format('%-5s', severity).downcase
+        severity = %(#{severity_colour}#{severity})
+
         data = format_hash data_hash
         error = format_hash error_hash
 
-        text = %(#{timestamp} pid="#{pid}" thread="#{thread}" severity="#{severity}" #{data} #{error}).strip
+        text = timestamp.to_s
+        text << write_kv('pid', pid)
+        text << write_kv('thread', thread)
+        text << write_kv('severity', severity)
+        text << data
+        text << error
 
-        "#{text}\n"
+        "#{text.strip}\n"
       end
 
       private
+
+      def write_kv key, value
+        %(#{DARK_COLOUR}#{key}="#{DEFAULT_COLOUR}#{value}#{DARK_COLOUR}"#{DEFAULT_COLOUR} )
+      end
 
       def escape string
         string.gsub(/"/, '"').gsub("\n", ' ')
@@ -37,7 +64,7 @@ module Ehonda
       def format_hash hash
         hash.map do |k, v|
           v = escape v.to_s
-          %(#{k}="#{v}")
+          write_kv k, v
         end.join ' '
       end
 
