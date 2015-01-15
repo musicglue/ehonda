@@ -1,4 +1,5 @@
 require 'logger'
+require 'active_support/tagged_logging'
 
 module Ehonda
   module Logging
