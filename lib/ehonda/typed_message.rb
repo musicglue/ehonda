@@ -53,7 +53,6 @@ module Ehonda
               unwrap_non_raw_message_format @message
             else
               raw_text = @message
-              raw_text = @message.body if defined?(::Aws) && @message.is_a?(::Aws::SQS::Message)
 
               parsed = ActiveSupport::JSON.decode(raw_text.to_s)
               parsed = ActiveSupport::JSON.decode(parsed['Message']) if parsed.key?('Message')
