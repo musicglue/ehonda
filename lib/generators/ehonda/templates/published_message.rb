@@ -14,7 +14,7 @@ class PublishedMessage < ActiveRecord::Base
 
   def self.publish message, header = {}
     topic_name = message.class.to_s.underscore.dasherize.sub(/-message$/, '')
-    publish_raw(topic_name, headers, message.attributes)
+    publish_raw(topic_name, header, message.attributes)
   end
 
   def self.publish_raw topic_name, body, header = {}
