@@ -12,19 +12,15 @@ class PublishedMessage < ActiveRecord::Base
   validates :message, presence: true
   validates :topic, presence: true
 
-  def self.publish message, header = {}
+  def self.publish message, headers = {}
     topic_name = message.class.to_s.underscore.dasherize.sub(/-message$/, '')
-    publish_raw(topic_name, header, message.attributes)
-  end
-
-  def self.publish_raw topic_name, body, header = {}
-    header.merge!(type: topic_name).reverse_merge!(id: SecureRandom.uuid, version: 1)
+    headers.merge!(type: topic_name).reverse_merge!(id: SecureRandom.uuid, version: 1)
 
     PublishedMessage.create!(
       topic: topic_name,
       message: {
-        header: header,
-        body: body
+        header: headers,
+        body: message.attributes
       })
   end
 end
