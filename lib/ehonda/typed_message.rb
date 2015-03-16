@@ -47,21 +47,26 @@ module Ehonda
       @hash ||= begin
         h = if @message.is_a?(TypedMessage)
               @message.to_h
+            elsif @message.is_a?(Aws::SQS::Message)
+              parse_raw_text @message.body
             elsif defined?(::ActiveAttr) && @message.is_a?(::ActiveAttr::Model)
               convert_active_attr_model_to_hash @message
             elsif @message.is_a?(Hash)
               unwrap_non_raw_message_format @message
             else
-              raw_text = @message
-
-              parsed = ActiveSupport::JSON.decode(raw_text.to_s)
-              parsed = ActiveSupport::JSON.decode(parsed['Message']) if parsed.key?('Message')
-
-              unwrap_non_raw_message_format parsed
+              parse_raw_text @message
             end
 
         sanitizer.sanitize(h).with_indifferent_access
       end
+    end
+
+    def parse_raw_text raw_text
+      unwrap_non_raw_message_format ActiveSupport::JSON.decode(raw_text.to_s)
+    end
+
+    def sanitizer
+      @sanitizer ||= MessageSanitizer.new
     end
 
     # if the queue this message was received from was not configured
@@ -70,10 +75,6 @@ module Ehonda
     def unwrap_non_raw_message_format hash
       hash = ActiveSupport::JSON.decode(hash['Message']) if hash.key?('Message')
       hash
-    end
-
-    def sanitizer
-      @sanitizer ||= MessageSanitizer.new
     end
   end
 end

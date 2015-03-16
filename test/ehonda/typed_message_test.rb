@@ -14,6 +14,8 @@ describe Ehonda::TypedMessage do
       body: {
         some_key: 'some value'
       }}
+
+    @valid_message_json = ActiveSupport::JSON.encode @valid_message
   end
 
   it 'can be built from a valid message hash' do
@@ -23,13 +25,13 @@ describe Ehonda::TypedMessage do
   end
 
   it 'can be built from valid message json' do
-    message = @typed_message.new ActiveSupport::JSON.encode @valid_message
+    message = @typed_message.new @valid_message_json
 
     message.to_h['body']['some_key'].must_equal 'some value'
   end
 
   it 'can be built from valid non-raw format message json' do
-    non_raw_hash = { 'Message' => ActiveSupport::JSON.encode(@valid_message) }
+    non_raw_hash = { 'Message' => @valid_message_json }
     message = @typed_message.new non_raw_hash
 
     message.to_h['body']['some_key'].must_equal 'some value'
@@ -56,5 +58,14 @@ describe Ehonda::TypedMessage do
 
     message = @typed_message.new MyMessage.new(foo: 121)
     message.to_h['body']['foo'].must_equal 121
+  end
+
+  it 'can be built from an Aws::SQS::Message' do
+    sqs_message = Aws::SQS::Message.new(
+      queue_url: 'http://example.org/queue1',
+      receipt_handle: SecureRandom.uuid,
+      data: { body: @valid_message_json })
+    message = @typed_message.new sqs_message
+    message.to_h['body']['some_key'].must_equal 'some value'
   end
 end
