@@ -35,8 +35,8 @@ class IdempotentPublisherWorker
 
       if @message_count > 0
         Shoryuken.logger.debug(log_data.merge(
-          state: 'published',
-          count: @message_count))
+                                 state: 'published',
+                                 count: @message_count))
       else
         @sleep = true
       end

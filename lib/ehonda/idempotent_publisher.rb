@@ -22,7 +22,7 @@ module Ehonda
           response = publisher.publish message.message
           message.update! response: response.data.to_hash, published_at: Time.now
         rescue => e
-          @logger.error({ component: 'idempotent_publisher', state: 'publish', error: e })
+          @logger.error(component: 'idempotent_publisher', state: 'publish', error: e)
           message.update! response: { error: e.to_s }
         end
       end
