@@ -13,4 +13,4 @@ gemspec
 # To use debugger
 # gem 'debugger'
 
-gem 'shoryuken', github: 'musicglue/shoryuken', branch: 'financials-app'
+gem 'shoryuken', github: 'phstc/shoryuken'
