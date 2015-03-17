@@ -47,7 +47,7 @@ module Ehonda
       @hash ||= begin
         h = if @message.is_a?(TypedMessage)
               @message.to_h
-            elsif @message.is_a?(Aws::SQS::Message)
+            elsif @message.is_a?(::Aws::SQS::Message)
               parse_raw_text @message.body
             elsif defined?(::ActiveAttr) && @message.is_a?(::ActiveAttr::Model)
               convert_active_attr_model_to_hash @message
