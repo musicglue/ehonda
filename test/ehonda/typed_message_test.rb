@@ -63,6 +63,7 @@ describe Ehonda::TypedMessage do
   it 'can be built from an Aws::SQS::Message' do
     sqs_message = Aws::SQS::Message.new(
       queue_url: 'http://example.org/queue1',
+      client: Object.new,
       receipt_handle: SecureRandom.uuid,
       data: { body: @valid_message_json })
     message = @typed_message.new sqs_message
