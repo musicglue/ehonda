@@ -13,6 +13,7 @@ module Ehonda
     end
 
     attr_reader :queue_defaults, :sns_endpoint, :sns_protocol, :sqs_endpoint, :sqs_protocol
+    attr_accessor :published_messages
 
     def add_queue name
       environmental_name = Aws::EnvironmentalName.new(name).to_s
@@ -25,11 +26,11 @@ module Ehonda
     end
 
     def aws_options
-      @aws_options ||= shoryuken_config[:aws].slice :access_key_id, :region, :secret_access_key
+      @aws_options ||= aws_hash.slice :access_key_id, :region, :secret_access_key
     end
 
     def aws_account_id
-      shoryuken_config[:aws][:account_id]
+      aws_hash[:account_id]
     end
 
     def aws_region
@@ -38,8 +39,8 @@ module Ehonda
 
     def enable_cmb_mode
       @sns_protocol = @sqs_protocol = 'cqs'
-      @sns_endpoint = shoryuken_config[:aws][:sns_endpoint]
-      @sqs_endpoint = shoryuken_config[:aws][:sqs_endpoint]
+      @sns_endpoint = aws_hash[:sns_endpoint]
+      @sqs_endpoint = aws_hash[:sqs_endpoint]
     end
 
     def queues
@@ -48,6 +49,14 @@ module Ehonda
 
     def get_queue environmental_name
       @queues[environmental_name]
+    end
+
+    def iam_group_name
+      iam_hash[:group_name]
+    end
+
+    def iam_policy_name
+      iam_hash[:policy_name]
     end
 
     def require_workers
@@ -116,9 +125,19 @@ module Ehonda
 
     def aws_client_options endpoint_key
       options = aws_options
-      endpoint = shoryuken_config[:aws][endpoint_key]
+      endpoint = aws_hash[endpoint_key]
       options = options.merge(endpoint: endpoint) unless endpoint.blank?
       options
+    end
+
+    def aws_hash
+      shoryuken_config[:aws]
+    end
+
+    def iam_hash
+      iam = aws_hash.fetch(:iam) do
+        fail 'IAM section not found within AWS yaml.'
+      end
     end
   end
 end
