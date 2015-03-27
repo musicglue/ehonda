@@ -13,7 +13,7 @@ module Ehonda
             file.write application_policy
             @logger.info application_policy_written_to: file.path
           else
-            group_policy = Aws::IAM::GroupPolicy.new(
+            group_policy = ::Aws::IAM::GroupPolicy.new(
               Ehonda.configuration.iam_group_name,
               Ehonda.configuration.iam_policy_name)
 
