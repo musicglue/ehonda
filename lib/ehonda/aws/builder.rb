@@ -23,7 +23,7 @@ module Ehonda
       end
 
       def build_topics
-        Shoryuken.worker_registry.topics.each do |topic|
+        (Shoryuken.worker_registry.topics + Ehonda.configuration.published_topics).uniq.sort.each do |topic|
           TopicBuilder.new(@logger, topic).build
         end
       end

@@ -37,7 +37,7 @@ module Ehonda
       end
 
       def queues
-        @subscriptions.keys
+        @subscriptions.keys.sort
       end
 
       def register_worker(queue, clazz)
@@ -85,7 +85,7 @@ module Ehonda
                        @subscriptions.values.map(&:keys).flatten
                      end
 
-        (topic_list.uniq - ['*']).map { |topic| env_name topic }
+        (topic_list.uniq - ['*']).map { |topic| env_name topic }.sort
       end
 
       def workers(queue)

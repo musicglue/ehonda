@@ -27,7 +27,7 @@ module Ehonda
 
         def application_policy
           @application_policy ||= begin
-            published_topic_arns = Ehonda.configuration.published_messages.map { |message| @arns.sns_topic_arn message.constantize.to_topic_name }
+            published_topic_arns = Ehonda.configuration.published_topics.map { |topic| @arns.sns_topic_arn topic }
             subscribed_topic_arns = Shoryuken.worker_registry.topics.map { |topic| @arns.sns_topic_arn topic }
             queue_arns = Shoryuken.worker_registry.queues.map { |queue| @arns.sqs_queue_arn queue }
 
@@ -38,8 +38,6 @@ module Ehonda
     {
       "Effect": "Allow",
       "Action": [
-        "sns:CreateTopic",
-        "sns:SetEndpointAttributes",
         "sns:Subscribe"
       ],
       "Resource": [
@@ -49,9 +47,7 @@ module Ehonda
     {
       "Effect": "Allow",
       "Action": [
-        "sns:CreateTopic",
-        "sns:Publish",
-        "sns:SetEndpointAttributes"
+        "sns:Publish"
       ],
       "Resource": [
 #{arn_array_policy_string published_topic_arns, '        '}
@@ -60,22 +56,11 @@ module Ehonda
     {
       "Effect": "Allow",
       "Action": [
-        "sns:SetSubscriptionAttributes"
-      ],
-      "Resource": [
-        "#{@arns.sns_topic_arn '*'}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
         "sqs:ChangeMessageVisibility",
-        "sqs:CreateQueue",
         "sqs:DeleteMessage",
         "sqs:GetQueueAttributes",
         "sqs:GetQueueUrl",
-        "sqs:ReceiveMessage",
-        "sqs:SetQueueAttributes"
+        "sqs:ReceiveMessage"
       ],
       "Resource": [
 #{arn_array_policy_string queue_arns, '        '}

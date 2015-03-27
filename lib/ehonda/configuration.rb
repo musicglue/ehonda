@@ -59,6 +59,12 @@ module Ehonda
       iam_hash[:policy_name]
     end
 
+    def published_topics
+      published_messages.map do |message|
+        Ehonda::Aws::EnvironmentalName.new(message.constantize.to_topic_name).to_s
+      end
+    end
+
     def require_workers
       Dir[Rails.root + '**' + 'app' + 'workers' + '*.rb'].each do |path|
         require path
@@ -122,6 +128,10 @@ module Ehonda
     end
 
     private
+
+    def arns
+      @arns ||= Ehonda::Aws::Arns.new
+    end
 
     def aws_client_options endpoint_key
       options = aws_options
