@@ -60,7 +60,7 @@ module Ehonda
     end
 
     def published_topics
-      [published_messages].flatten.uniq.sort.map do |message|
+      [published_messages].flatten.compact.uniq.sort.map do |message|
         Ehonda::Aws::EnvironmentalName.new(message.constantize.to_topic_name).to_s
       end
     end
