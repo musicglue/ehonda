@@ -13,7 +13,7 @@ module Ehonda
           @logger.info building_queue: @name
 
           queue_url = @sqs.create_queue(queue_name: @name)[:queue_url]
-          queue = ::Aws::SQS::Queue.new queue_url, @sqs
+          queue_arn = @sqs.get_queue_attributes(queue_url: queue_url, attribute_names: ["QueueArn"])[:attributes]['QueueArn']
           queue_configuration = Ehonda.configuration.get_queue(@name)
 
           attributes = {
@@ -31,11 +31,11 @@ module Ehonda
               attributes.merge! 'RedrivePolicy' => policy.to_s
             end
 
-            policy = queue_policy queue
+            policy = queue_policy queue_arn
             attributes.merge! 'Policy' => policy
           end
 
-          queue.set_attributes attributes: attributes
+          @sqs.set_queue_attributes queue_url: queue_url, attributes: attributes
         end
 
         def delete
@@ -52,13 +52,13 @@ module Ehonda
           arns.sort.map { |arn| %(#{indent}"#{arn}") }.join(",\n")
         end
 
-        def queue_policy queue
+        def queue_policy queue_arn
           topic_arns = topics.map { |topic| @arns.sns_topic_arn topic }
 
           <<-EOS
 {
   "Version": "2008-10-17",
-  "Id": "#{queue.arn}/envoy-generated-policy",
+  "Id": "#{queue_arn}/envoy-generated-policy",
   "Statement": [
     {
       "Effect": "Allow",
@@ -66,7 +66,7 @@ module Ehonda
         "AWS": "*"
       },
       "Action": "SQS:SendMessage",
-      "Resource": "#{queue.arn}",
+      "Resource": "#{queue_arn}",
       "Condition": {
         "ArnEquals": {
           "aws:SourceArn": [
