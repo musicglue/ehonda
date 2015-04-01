@@ -50,7 +50,7 @@ module Ehonda
         "sns:Publish"
       ],
       "Resource": [
-#{arn_array_policy_string (published_topiac_arns + subscribed_topic_arns), '        '}
+#{arn_array_policy_string (published_topic_arns + subscribed_topic_arns), '        '}
       ]
     },
     {
