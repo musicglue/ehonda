@@ -29,7 +29,7 @@ module Ehonda
           error_hash[:backtrace] = format_backtrace(error_object.backtrace) if error_object.backtrace
         end
 
-        timestamp = write_kv('timestamp', time.utc.iso8601) if defined?(Rails) && Rails.env.development?
+        timestamp = write_kv('at', time.utc.iso8601) if defined?(Rails) && Rails.env.development?
 
         severity_colour = "\033[#{SEVERITY_TO_COLOR_MAP[severity]}m"
         severity = format('%-5s', severity).downcase
@@ -39,8 +39,7 @@ module Ehonda
         error = format_hash error_hash
 
         text = [timestamp]
-        text << write_kv('pid', pid)
-        text << write_kv('thread', thread)
+        text << write_kv('thread', "#{pid}|#{thread}")
         text << write_kv('severity', severity)
         text << data
         text << error
