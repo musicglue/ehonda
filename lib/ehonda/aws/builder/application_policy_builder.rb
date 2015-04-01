@@ -50,7 +50,7 @@ module Ehonda
         "sns:Publish"
       ],
       "Resource": [
-#{arn_array_policy_string published_topic_arns, '        '}
+#{arn_array_policy_string (published_topiac_arns + subscribed_topic_arns), '        '}
       ]
     },
     {
@@ -73,7 +73,7 @@ EOS
         end
 
         def arn_array_policy_string arns, indent
-          arns.sort.map { |arn| %(#{indent}"#{arn}") }.join(",\n")
+          arns.uniq.sort.map { |arn| %(#{indent}"#{arn}") }.join(",\n")
         end
       end
     end
