@@ -10,7 +10,9 @@ module Ehonda
       counter = CountLogger.new { |index| "#{index} message(s) written" }
 
       File.open(@path, 'w+') do |file|
-        scope.find_each do |message|
+        method = scope.respond_to?(:find_each) ? :find_each : :each
+
+        scope.send(method) do |message|
           file.write message.message.to_json
           file.write "\n"
           counter.count
