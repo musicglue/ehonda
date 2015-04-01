@@ -60,13 +60,26 @@ describe Ehonda::TypedMessage do
     message.to_h['body']['foo'].must_equal 121
   end
 
-  it 'can be built from an Aws::SQS::Message' do
-    sqs_message = Aws::SQS::Message.new(
-      queue_url: 'http://example.org/queue1',
-      client: Object.new,
-      receipt_handle: SecureRandom.uuid,
-      data: { body: @valid_message_json })
-    message = @typed_message.new sqs_message
-    message.to_h['body']['some_key'].must_equal 'some value'
+  it 'can be built from an Shoryuken::Message' do
+    if defined? ::Shoryuken::Message
+      shoryuken_message = Shoryuken::Message.new(
+        Object.new,
+        'http://example.org/queue1',
+        { body: @valid_message_json })
+      message = @typed_message.new shoryuken_message
+      message.to_h['body']['some_key'].must_equal 'some value'
+    end
+  end
+
+  it 'can be built from an Shoryuken::Message' do
+    if defined? ::Aws::SQS::Message
+      sqs_message = Aws::SQS::Message.new(
+        queue_url: 'http://example.org/queue1',
+        client: Object.new,
+        receipt_handle: SecureRandom.uuid,
+        data: { body: @valid_message_json })
+      message = @typed_message.new sqs_message
+      message.to_h['body']['some_key'].must_equal 'some value'
+    end
   end
 end
