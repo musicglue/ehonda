@@ -19,8 +19,9 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'activesupport'
+  s.add_runtime_dependency 'aws-sdk-resources'
   s.add_runtime_dependency 'retryable'
-  s.add_runtime_dependency 'shoryuken', '>= 1.0'
+  s.add_runtime_dependency 'shoryuken', '>= 1.0.1'
 
   s.add_development_dependency 'active_attr'
   s.add_development_dependency 'awesome_print'

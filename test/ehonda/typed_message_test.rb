@@ -1,5 +1,6 @@
 require_relative '../test_helper'
 require 'active_attr'
+require 'ostruct'
 require 'ehonda/typed_message'
 
 describe Ehonda::TypedMessage do
@@ -65,7 +66,7 @@ describe Ehonda::TypedMessage do
       shoryuken_message = Shoryuken::Message.new(
         Object.new,
         'http://example.org/queue1',
-        { body: @valid_message_json })
+        OpenStruct.new(body: @valid_message_json))
       message = @typed_message.new shoryuken_message
       message.to_h['body']['some_key'].must_equal 'some value'
     end
