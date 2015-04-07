@@ -27,8 +27,6 @@ module Ehonda
 
         def application_policy
           @application_policy ||= begin
-            published_topic_arns = Ehonda.configuration.published_topics.map { |topic| @arns.sns_topic_arn topic }
-            subscribed_topic_arns = Shoryuken.worker_registry.topics.map { |topic| @arns.sns_topic_arn topic }
             queue_arns = Shoryuken.worker_registry.queues.map { |queue| @arns.sqs_queue_arn queue }
 
             <<-EOS
@@ -38,19 +36,11 @@ module Ehonda
     {
       "Effect": "Allow",
       "Action": [
+        "sns:Publish",
         "sns:Subscribe"
       ],
       "Resource": [
-#{arn_array_policy_string subscribed_topic_arns, '        '}
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "sns:Publish"
-      ],
-      "Resource": [
-#{arn_array_policy_string (published_topic_arns + subscribed_topic_arns), '        '}
+        "#{@arns.sns_topic_arn '*'}"
       ]
     },
     {
