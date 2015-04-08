@@ -26,6 +26,20 @@
 #   end
 #
 #   config.add_queue 'another_queue_name'
+#
+#   config.published_messages = %w(
+#     SomethingMessage
+#     SomethingElseMessage
+#   )
+# end
+#
+# Force workers to register themselves with Shoryuken under Rails.env.development,
+# because otherwise Rails doesn't know about them until their constants are autoloaded.
+# This is necessary for the rake tasks to work correctly.
+#
+# if Rails.env.development?
+#   FooWorker
+#   BarWorker
 # end
 
 Shoryuken.on_start do

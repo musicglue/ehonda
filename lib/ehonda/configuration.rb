@@ -65,12 +65,6 @@ module Ehonda
       end
     end
 
-    def require_workers
-      Dir[Rails.root + '**' + 'app' + 'workers' + '*.rb'].each do |path|
-        require path
-      end
-    end
-
     def shoryuken_config_path
       @shoryuken_config_path ||= begin
         (Rails.root + 'config' + 'shoryuken.yml') if defined?(::Rails)

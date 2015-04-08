@@ -28,7 +28,6 @@ namespace :ehonda do
       private
 
       def builder
-        Ehonda.configuration.require_workers
         require 'ehonda/aws/builder'
         Ehonda::Aws::Builder.new
       end
