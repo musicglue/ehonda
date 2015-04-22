@@ -41,6 +41,8 @@ module Ehonda
       end
 
       def register_worker(queue, clazz)
+        return if @subscriptions.values.map(&:values).flatten.map(&:to_s).uniq.include? clazz.to_s
+
         invalid_worker = workers(queue).find do |worker_class|
           worker_class.get_shoryuken_options['batch'] == true || clazz.get_shoryuken_options['batch'] == true
         end
