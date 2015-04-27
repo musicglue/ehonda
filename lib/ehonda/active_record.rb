@@ -8,7 +8,7 @@ module Ehonda
       end
     end
 
-    def with_transaction opts
+    def with_transaction opts = {}
       ::ActiveRecord::Base.transaction(opts) do
         yield
       end
