@@ -39,8 +39,9 @@ module Ehonda
     def convert_active_attr_model_to_hash model
       topic_name = model.class.to_s.underscore.dasherize.sub(/-message$/, '')
       headers = { id: SecureRandom.uuid, type: topic_name, version: 1 }
+      attrs = model.respond_to?(:to_h) ? model.to_h : model.attributes
 
-      { header: headers, body: model.attributes }
+      { header: headers, body: attrs }
     end
 
     def hash
