@@ -12,7 +12,7 @@ module Ehonda
     def configure
       @config ||= Configuration.new
       yield @config if block_given?
-      @config.validate!
+      @config.validate! unless Rails.env.test?
     end
 
     def configuration
