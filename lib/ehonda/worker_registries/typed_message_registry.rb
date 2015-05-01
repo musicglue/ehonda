@@ -22,6 +22,10 @@ module Ehonda
         @subscriptions.clear
       end
 
+      def dead_letter_queue?(name)
+        @dead_letter_queue_name == name
+      end
+
       def fetch_worker(queue, message)
         queue_subscriptions = @subscriptions.fetch(queue) do
           fail UnroutableMessageError, "#{self} does not know how to route messages for queue '#{queue}'."

@@ -86,7 +86,13 @@ EOS
         end
 
         def topics
-          Shoryuken.worker_registry.topics(@name)
+          registry = Shoryuken.worker_registry
+
+          if registry.dead_letter_queue?(@name)
+            %w(*)
+          else
+            registry.topics(@name)
+          end
         end
       end
     end
