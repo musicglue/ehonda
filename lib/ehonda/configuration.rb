@@ -113,6 +113,10 @@ module Ehonda
         section.valid?
         errors.push *(section.errors)
       end
+
+      errors << "AWS access key must be supplied." if aws_options[:access_key_id].blank?
+      errors << "AWS account id must be supplied." if aws_account_id.blank?
+      errors << "AWS secret key must be supplied." if aws_options[:secret_access_key].blank?
     end
 
     def validate!
