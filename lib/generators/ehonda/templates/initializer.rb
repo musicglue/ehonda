@@ -33,14 +33,12 @@
 #   )
 # end
 #
-# Force workers to register themselves with Shoryuken under Rails.env.development,
-# because otherwise Rails doesn't know about them until their constants are autoloaded.
-# This is necessary for the rake tasks to work correctly.
+# Force workers to register themselves with Shoryuken, because otherwise Rails
+# doesn't know about them until their constants are autoloaded.  This is
+# necessary for the rake tasks to work correctly.
 #
-# if Rails.env.development?
-#   FooWorker
-#   BarWorker
-# end
+# FooWorker
+# BarWorker
 
 Shoryuken.on_start do
   Celluloid.logger = Shoryuken.logger
