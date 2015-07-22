@@ -58,7 +58,7 @@ module Ehonda
           <<-EOS
 {
   "Version": "2008-10-17",
-  "Id": "#{queue_arn}/envoy-generated-policy",
+  "Id": "#{queue_arn}/ehonda-generated-policy",
   "Statement": [
     {
       "Effect": "Allow",
