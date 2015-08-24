@@ -7,8 +7,7 @@ module Ehonda
       header = hash['headers'] || hash['header']
       body = hash['body']
 
-      invalid_message = !header.is_a?(Hash) || !body.is_a?(Hash) ||
-                        header.empty? || body.empty?
+      invalid_message = !header.is_a?(Hash) || header.empty? || !body.is_a?(Hash) 
 
       fail InvalidMessageError, 'MessageSanitizer expected a hash with non-empty '\
                                 "'header' and 'body' keys, but received #{hash}." if invalid_message
