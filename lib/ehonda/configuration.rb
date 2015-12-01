@@ -39,6 +39,10 @@ module Ehonda
 
     def enable_cmb_mode
       @sns_protocol = @sqs_protocol = 'cqs'
+      enable_custom_endpoints
+    end
+
+    def enable_custom_endpoints
       @sns_endpoint = aws_hash[:sns_endpoint]
       @sqs_endpoint = aws_hash[:sqs_endpoint]
     end
