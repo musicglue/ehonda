@@ -3,7 +3,13 @@ module Ehonda
     class EnvironmentalName
       def initialize(name)
         @name = [name.to_s.dasherize]
-        @name << Rails.env if defined?(::Rails)
+
+        if !ENV['AWS_ENV'].blank?
+          @name << ENV['AWS_ENV']
+        elsif defined?(::Rails)
+          @name << Rails.env
+        end
+
         @name = @name.join('-')
       end
 
