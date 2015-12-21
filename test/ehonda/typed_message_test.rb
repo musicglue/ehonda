@@ -63,9 +63,12 @@ describe Ehonda::TypedMessage do
 
   it 'can be built from an Shoryuken::Message' do
     if defined? ::Shoryuken::Message
+      client = stub
+      client.stubs(:get_queue_url).returns OpenStruct.new(queue_url: 'http://example.org/queue1')
+      queue = Shoryuken::Queue.new client, 'queue1'
       shoryuken_message = Shoryuken::Message.new(
         Object.new,
-        'http://example.org/queue1',
+        queue,
         OpenStruct.new(body: @valid_message_json))
       message = @typed_message.new shoryuken_message
       message.to_h['body']['some_key'].must_equal 'some value'
