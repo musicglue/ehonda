@@ -12,9 +12,8 @@ module Ehonda
           max_retries = nil
 
           if errors.any?
-            current_retry = retry_number(sqs_msg)
             max = max_retries(queue)
-
+            current_retry = retry_number(sqs_msg, max)
             retries_exhausted = (current_retry || max) >= max
           end
 
@@ -45,7 +44,7 @@ module Ehonda
         end
 
         def only_dead_letter_errors worker
-          opts = worker.class.get_shoryuken_options['bugsnag'] || {}
+          opts = (worker.class.get_shoryuken_options['bugsnag'] || {}).with_indifferent_access
           [opts['only_on_dead_letter']].flatten.compact.uniq
         end
 
@@ -60,7 +59,7 @@ module Ehonda
           return 0 if json.blank?
 
           begin
-            ActiveSupport::JSON.decode(json)['maxReceiveCount']
+            ActiveSupport::JSON.decode(json)['maxReceiveCount'].to_i
           rescue
             0
           end
@@ -70,19 +69,12 @@ module Ehonda
           ::Bugsnag.notify error, parameters: parameters
         end
 
-        def retry_number sqs_msg
-          sqs_msg.attributes['ApproximateReceiveCount']
+        def retry_number sqs_msg, default
+          (sqs_msg.attributes['ApproximateReceiveCount'] || max).to_i
+        rescue
+          max
         end
       end
     end
   end
 end
-
-__END__
-
-  shoryuken_options(
-    bugsnag: {
-      only_dead_letter_errors: UpdatePlatformFeeContractFromUserAppService::SubjectNotFoundError },
-
-    subscriptions: {
-      financials_jobs: 'platform_fee_contract_updated_by_user_app' })
