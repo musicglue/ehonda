@@ -49,7 +49,7 @@ describe Ehonda::Middleware::Server::Bugsnag do
   def expect_notification
     @middleware.expects(:notify).once.with do |error, opts|
       error.must_be_instance_of @error
-      opts.must_equal parameters: { message: @original_header }
+      opts[:parameters][:message].must_equal @original_header
     end
   end
 

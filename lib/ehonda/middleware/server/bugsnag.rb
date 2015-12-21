@@ -8,6 +8,9 @@ module Ehonda
           errors = only_dead_letter_errors worker
           retries_exhausted = false
 
+          current_retry = nil
+          max_retries = nil
+
           if errors.any?
             current_retry = retry_number(sqs_msg)
             max = max_retries(queue)
@@ -26,6 +29,10 @@ module Ehonda
             rescue
               parameters.store :unknown_message_format, body
             end
+
+            parameters.store :queue, queue
+            parameters.store :retries, { current: current_retry, max: max_retries }
+            parameters.store :worker, worker.class
 
             notify e, parameters: parameters
           end
