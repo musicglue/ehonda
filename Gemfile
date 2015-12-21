@@ -12,3 +12,5 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
+
+gem 'shoryuken', github: 'musicglue/shoryuken', branch: 'loggger_typo'
