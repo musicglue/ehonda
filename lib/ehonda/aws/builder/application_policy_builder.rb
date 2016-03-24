@@ -8,7 +8,7 @@ module Ehonda
         end
 
         def build
-          if Rails.env.development?
+          if (ENV['RAILS_ENV'] || ENV['RACK_ENV']) == 'development'
             file = Tempfile.create ['aws-application-policy', '.json']
             file.write application_policy
             @logger.info application_policy_written_to: file.path
