@@ -69,7 +69,7 @@ module Ehonda
           ::Bugsnag.notify error, parameters: parameters
         end
 
-        def retry_number sqs_msg, default
+        def retry_number sqs_msg, max
           (sqs_msg.attributes['ApproximateReceiveCount'] || max).to_i
         rescue
           max
