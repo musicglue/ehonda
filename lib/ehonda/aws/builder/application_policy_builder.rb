@@ -5,10 +5,13 @@ module Ehonda
         def initialize logger
           @logger = logger
           @arns = Arns.new
+          @env = ENV['RAILS_ENV'] || ENV['RACK_ENV']
+          @env = 'development' if @env.blank?
+          @env.downcase!
         end
 
         def build
-          if (ENV['RAILS_ENV'] || ENV['RACK_ENV']) == 'development'
+          if @env == 'development'
             file = Tempfile.create ['aws-application-policy', '.json']
             file.write application_policy
             @logger.info application_policy_written_to: file.path
