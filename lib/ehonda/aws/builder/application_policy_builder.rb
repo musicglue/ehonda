@@ -7,7 +7,7 @@ module Ehonda
           @arns = Arns.new
           @env = ENV['RAILS_ENV'] || ENV['RACK_ENV']
           @env = 'development' if @env.blank?
-          @env.downcase!
+          @env = @env.downcase
         end
 
         def build
