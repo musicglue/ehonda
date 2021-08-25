@@ -15,7 +15,7 @@ module Ehonda
 
           def call worker, _queue, _sqs_msg, _body
             Retrier.new(retrier_options(worker)).call do
-              ::ActiveRecord::Base.transaction(@transaction_options) do
+              ::ActiveRecord::Base.transaction(**@transaction_options) do
                 yield
               end
             end
